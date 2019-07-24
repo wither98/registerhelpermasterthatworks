@@ -1,0 +1,79 @@
+<?php
+/*
+Plugin Name: Register Helper Example
+Plugin URI: http://www.paidmembershipspro.com/wp/pmpro-customizations/
+Description: Register Helper Initialization Example
+Version: .2
+Author: Stranger Studios
+Author URI: http://www.strangerstudios.com
+*/
+//we have to put everything in a function called on init, so we are sure Register Helper is loaded
+function my_pmprorh_init()
+{
+	//don't break if Register Helper is not loaded
+	if(!function_exists( 'pmprorh_add_registration_field' )) {
+		return false;
+	}
+	
+	//define the fields
+	
+	$fields = array();
+	$fields[] = new PMProRH_Field(
+		'farm',						// input name, will also be used as meta key
+		'text',							// type of field
+		array(
+			'label'		=> 'Farm Name (optional)',			// custom field label
+			'size'		=> 40,				// input size
+			'class'		=> 'farm',			// custom class
+			'profile'	=> true,			// show in user profile
+			'required'	=> false,			// make this field required
+			'levels'		=> array(1,2,3)		// only levels 1 and 2 should have the company field
+		)
+	);
+	$fields = array();
+	$fields[] = new PMProRH_Field(
+		'addfam',						// input name, will also be used as meta key
+		'text',							// type of field
+		array(
+			'label'		=> 'Additional Family Members (required for Family Memberships to earn exhibitor points)',			// custom field label
+			'size'		=> 40,				// input size
+			'class'		=> 'addfam',			// custom class
+			'profile'	=> true,			// show in user profile
+			'required'	=> true,			// make this field required
+			'levels'		=> array(1)		// only levels 1 should have the company field
+		)
+	);
+	$fields[] = new PMProRH_Field(
+			'District',						// input name, will also be used as meta key
+			'select',						// type of field
+			array(
+				'label'		=> 'Choose Your District',
+				'multiple' => false,
+				'required' => true,
+				'options' => array(				// <option> elements for select field
+					''		=> '',			// blank option - cannot be selected if this field is required
+					'District1'	=> 'District 1: ME, NH, VT, MA, RI, NY, NJ',	// <option value="lDistrict1">&lt; ME,NH,VT,MA,RI,NY,NJ</option>
+					'District2'	=> 'District 2: PA, MD, DC, DE, VA, WV',	// <option value="District2">PA,MD,DC,DE,VA,WV</option>
+					'District3'	=> 'District 3: AL, FL, GA, KY, NC, SC, TN, PR',	// <option value="District3">AL,FL,GA,KY,NC,SC,TN,PR</option>
+					'District4'	=> 'District 4: IN, IL, MI, MN, OH, WI',	// <option value="District4">IN,IL,MI,MN,OH,WI</option>
+					'District5'	=> 'District 5: AR, LA, MS, OK, TX',	// <option value="District5">AR,LA,MS,OK,TX</option>
+					'District6'	=> 'District 6: IA, KS, MO, NE',	// <option value="District6">IA,KS,MO,NE</option>
+					'District7'	=> 'District 7: CO, MT, ND, SD, UT, WY',	// <option value="District7">CO,MT,ND,SD,UT,WY</option>
+					'District8'	=> 'District 8: AK, WA, OR, ID',	// <option value="District8">AK,WA,OR,ID</option>
+					'District9'	=> 'District 9: AZ, CA, NM, NV, HI',	// <option value="District9">AAZ,CA,NM,NV,HI</option>
+				)
+			)
+		);
+		
+	
+	
+	
+	//add the fields into a new checkout_boxes are of the checkout page
+	foreach($fields as $field)
+		pmprorh_add_registration_field(
+			'checkout_boxes',				// location on checkout page
+			$field						// PMProRH_Field object
+		);
+	//that's it. see the PMPro Register Helper readme for more information and examples.
+}
+add_action( 'init', 'my_pmprorh_init' );
